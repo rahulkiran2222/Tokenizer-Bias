@@ -2,10 +2,9 @@ torch
 transformers
 datasets
 tokenizers
+gradio
+indic-transliteration
 pytesseract
 pillow
-indic-transliteration
-pandas
 matplotlib
-seaborn
-scipy
+pandas
