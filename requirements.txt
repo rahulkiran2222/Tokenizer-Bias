@@ -1,0 +1,11 @@
+torch
+transformers
+datasets
+tokenizers
+pytesseract
+pillow
+indic-transliteration
+pandas
+matplotlib
+seaborn
+scipy
