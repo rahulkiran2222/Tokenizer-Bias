@@ -1,165 +1,370 @@
-🔤 Tokenizer-Bias
+# 🔤 Tokenizer-Bias
 
-Understanding the "Indic Tax": Byte-Level vs. Subword Representations
-Quantifying tokenizer fragmentation. Measuring linguistic bias. Building robust byte-level alternatives.
-🌐 Live Demo: https://huggingface.co/spaces/RahulKiran2222/tokenizer-bias
-⚡ Research Focus: Inefficiency in Hindi & Telugu LLM Processing
+<div align="center">
 
-🧠 Overview
-IndicToken-Bias is a research framework and analytics platform designed to expose the hidden "tax" paid by Indic languages in modern AI. While English tokenization is highly efficient, languages like Hindi and Telugu suffer from extreme fragmentation, leading to:
+### Understanding the *Indic Tax*: Byte-Level vs. Subword Representations
 
-Inflated Costs: 3–10x more tokens for the same semantic meaning.
+**Quantifying tokenization fragmentation • Measuring linguistic bias • Exploring tokenizer-free representations**
 
-Performance Degradation: Narrower context windows for non-English users.
+[![Python](https://img.shields.io/badge/Python-3.10+-blue.svg)]()
+[![PyTorch](https://img.shields.io/badge/PyTorch-2.x-red.svg)]()
+[![License](https://img.shields.io/badge/License-MIT-green.svg)]()
+[![Research](https://img.shields.io/badge/Research-NLP%20%7C%20Foundation%20Models-purple.svg)]()
 
-Robustness Failures: Brittleness under OCR noise and transliteration.
+### 🌐 Live Demo
 
-✨ Features
+**https://huggingface.co/spaces/RahulKiran2222/tokenizer-bias**
 
-⚔️ Fragmentation Battle
-Compare standard tokenizers (Llama/GPT) vs. Raw UTF-8 Bytes:
+---
 
-Token Inflation: Visualize how one word becomes 20+ tokens 📈
+*Investigating tokenization inefficiency and robustness in Hindi and Telugu for next-generation foundation models.*
 
-Compression Ratios: Bytes per token efficiency tracking 📉
+</div>
 
-Vocabulary Heatmaps: Identifying "dead" areas in large vocabularies.
+---
 
-🛡️ Robustness Stress-Test
-Analyze how models handle real-world "dirty" data:
+# Overview
 
-OCR Noise Sim: Real-time rendering and recovery using Tesseract.
+**Tokenizer-Bias** is an experimental framework for studying the hidden costs introduced by modern subword tokenization in Indic languages.
 
-Transliteration: Cross-script analysis (e.g., Devanagari ↔ Latin).
+While large language models are optimized primarily for English, morphologically rich and underrepresented languages often experience severe token fragmentation, resulting in:
 
-Code-Switching: Handling Hinglish/Teluglish transitions.
+* Increased token usage and computational overhead.
+* Reduced effective context length.
+* Vocabulary inefficiencies.
+* Sensitivity to transliteration and OCR corruption.
+* Poor robustness under multilingual and code-switched settings.
 
-🌱 TinyGPT Laboratory
-Byte-Level Modeling: Train 5M–20M parameter models directly on bytes.
+Inspired by recent tokenizer-free architectures such as **ByT5**, **CANINE**, **MegaByte**, **BLT**, and **MambaByte**, this project explores whether byte-level representations provide a more universal alternative.
 
-BPB Metric: Standardized "Bits-Per-Byte" evaluation for fair comparison.
+---
 
-Latent Analysis: Visualize character confusion matrices.
+# Research Questions
 
-🎨 Research UI
-Live Analyzer: Real-time tokenization feedback for Hindi/Telugu.
+### RQ1 — Tokenization Bias
 
-Fragmentation Scores: Instant "Indic Tax" calculation.
+How much fragmentation do modern tokenizers introduce for Hindi and Telugu?
 
-Modern Design: Clean, interactive interface for researcher exploration.
+### RQ2 — Representation Efficiency
 
-🧪 How It Works
+How do byte-level representations compare with subword tokenization?
 
-The Fragmentation Metric
-Calculates the Fertility Ratio: 
-R
-=
-N
-t
-o
-k
-e
-n
-s
-N
-w
-o
-r
-d
-s
-R= 
-N 
-words
-​	
- 
-N 
-tokens
-​	
- 
-​	
- 
+### RQ3 — Robustness
 
-Compares Llama's subword efficiency against raw UTF-8 byte distribution.
+How do both approaches behave under:
 
-OCR Corruption Pipeline
-Render: Text converted to 300 DPI images.
+* Transliteration
+* Code-switching
+* OCR-induced perturbations
 
-Distort: Gaussian blur, salt-and-pepper noise, and rotation applied.
+### RQ4 — Toward Tokenizer-Free Foundation Models
 
-Recover: Tesseract OCR attempts to rebuild text to identify character-level vulnerability.
+Can these observations motivate future multimodal tokenizer-free architectures?
 
-Evaluation Engine
-Uses Bits-Per-Byte (BPB) to normalize performance between models with different vocabulary sizes (e.g., 256 for Bytes vs. 32,000 for Llama).
+---
 
-🛠️ Tech Stack
+# System Overview
 
-Backend & AI
-Python 3.10+
+```text
+               Raw Text
+                   │
+        ┌──────────┴──────────┐
+        │                     │
+  Llama Tokenizer         UTF-8 Bytes
+        │                     │
+        ├──── Token Statistics
+        ├──── Compression Analysis
+        ├──── Sequence Inflation
+        │
+        └──────────────┐
+                       │
+              Tiny Language Models
+                       │
+            Robustness Evaluation
+                       │
+     Transliteration • OCR • Code-Switching
+```
 
-PyTorch: Custom TinyGPT architecture.
+---
 
-Transformers/Tokenizers: Llama/Tiktoken integration.
+# Features
 
-Datasets: IndicCorp v2 / OSCAR streaming.
+## Tokenization Analysis
 
-Robustness Tools
-Pytesseract: Optical Character Recognition.
+Compare:
 
-Pillow: Image-based noise simulation.
+* Llama tokenizer
+* GPT tokenizers
+* UTF-8 byte representations
 
-Indic-Transliteration: Script conversion engine.
+Metrics:
 
-Frontend & Live Demo
-Gradio: Interactive web interface.
+* Token count
+* Sequence inflation
+* Compression ratio
+* Vocabulary utilization
+* Token fertility
 
-Hugging Face Spaces: Cloud hosting.
+---
 
-📊 Sample Research Results
-Language	Llama Tokens (Word: "Hello")	Byte Count	Fertility Ratio
-English	1	5	1.0x
-Hindi	5	15	4.8x
-Telugu	24	24	24.0x
-🚀 Local Setup
+## Robustness Evaluation
 
-1. Clone the repo
-code
-Bash
-git clone https://github.com/rahulkiran2222/tokenizer-bias
+Study model behavior under realistic perturbations:
+
+### Transliteration
+
+```text
+namaste
+↓
+नमस्ते
+```
+
+### Code-Switching
+
+```text
+आज meeting cancel हो गयी।
+```
+
+### OCR Corruption
+
+Real image-based OCR loop:
+
+```text
+Text
+↓
+Image Rendering
+↓
+Blur + Noise
+↓
+Tesseract OCR
+↓
+Recovered Text
+↓
+Character-Level Errors
+```
+
+---
+
+## Tiny Language Model Experiments
+
+Baseline:
+
+```text
+Llama Tokenizer
+↓
+TinyGPT
+↓
+Prediction
+```
+
+Tokenizer-Free:
+
+```text
+UTF-8 Bytes
+↓
+TinyGPT
+↓
+Prediction
+```
+
+Metrics:
+
+* Loss
+* Perplexity
+* Bits-per-byte (BPB)
+* Robustness degradation
+
+---
+
+# Datasets
+
+### IndicCorp v2
+
+Languages:
+
+* Hindi
+* Telugu
+
+Reference Corpus:
+
+* English subset from OSCAR
+
+Split:
+
+```text
+Train      80%
+Validation 10%
+Test       10%
+```
+
+---
+
+# Evaluation Metrics
+
+| Category            | Metrics                      |
+| ------------------- | ---------------------------- |
+| Tokenization        | Token count, Fertility Ratio |
+| Efficiency          | Compression Ratio            |
+| Modeling            | Loss, Perplexity             |
+| Byte-Level Modeling | Bits-per-Byte                |
+| Robustness          | Accuracy degradation         |
+| Error Analysis      | Character confusion matrices |
+
+---
+
+# Example Results
+
+| Language | Avg Tokens | Byte Count | Fertility Ratio |
+| -------- | ---------- | ---------- | --------------- |
+| English  | 1          | 5          | 1.0×            |
+| Hindi    | 5          | 15         | 4.8×            |
+| Telugu   | 24         | 24         | 24.0×           |
+
+---
+
+# Repository Structure
+
+```bash
+tokenizer-bias/
+
+├── data/
+├── tokenizer_analysis/
+│   ├── token_count.py
+│   ├── compression_ratio.py
+│   ├── sequence_inflation.py
+│   └── vocab_fragmentation.py
+│
+├── encoders/
+│   └── utf8_encoder.py
+│
+├── models/
+│   ├── gpt_llama.py
+│   └── gpt_byte.py
+│
+├── training/
+│   ├── train_llama.py
+│   └── train_byte.py
+│
+├── robustness/
+│   ├── transliteration.py
+│   ├── code_switching.py
+│   ├── render_text.py
+│   ├── add_noise.py
+│   └── run_tesseract.py
+│
+├── evaluation/
+├── analysis/
+├── plots/
+├── report/
+└── README.md
+```
+
+---
+
+# Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/rahulkiran2222/tokenizer-bias.git
+
 cd tokenizer-bias
-2. Environment Setup
-code
-Bash
-# Setup system dependencies (OCR & Fonts)
-bash setup_env.sh
+```
 
-# Install Python packages
+### Install Dependencies
+
+```bash
 pip install -r requirements.txt
-3. Launch the Demo
-code
-Bash
+```
+
+### Launch Application
+
+```bash
 python app.py
-⚠️ Limitations
-Model Scale: TinyGPT (20M) is for representation analysis, not fluent generation.
+```
 
-OCR Speed: Image rendering adds latency to the live demo.
+---
 
-Font Support: Requires fonts-indic for proper rendering in Linux environments.
+# Limitations
 
-🔮 Future Work
-Byte-Mamba: Testing State-Space Models for long-sequence byte modeling.
+* Tiny language models are intended for representation analysis rather than fluent generation.
+* OCR evaluation depends on rendering quality and language-specific fonts.
+* Experiments currently focus on Hindi and Telugu only.
+* Results are not intended as large-scale benchmark conclusions.
 
-Dynamic Patching: Investigating BLT (Byte Latent Transformer) for Indic scripts.
+---
 
-V5 Multimodal: Pixel-to-Byte shared backbone for tokenizer-free foundation models.
+# Future Directions
 
-📚 Inspiration
-Yuki Asano: Vision-language representation research.
+## Byte-Mamba
 
-MegaByte/ByT5: Tokenizer-free modeling architectures.
+```text
+Bytes
+↓
+Mamba
+↓
+Language Model
+```
 
-📜 License
-MIT License
+---
 
-👤 Author
-Rahul Kiran G
-AI Researcher & Develope
+## Dynamic Byte Patching
+
+Inspired by Meta's BLT:
+
+```text
+Bytes
+↓
+Dynamic Patches
+↓
+Latent Transformer
+```
+
+---
+
+## Tokenizer-Free Multimodal Models
+
+```text
+Pixels + Bytes
+↓
+Shared Backbone
+↓
+Foundation Model
+```
+
+---
+
+# Inspiration
+
+This work is inspired by:
+
+* ByT5
+* CANINE
+* MegaByte
+* Byte Latent Transformer (BLT)
+* MambaByte
+
+and aligns with ongoing research in tokenizer-free language and vision foundation models.
+
+---
+
+# Citation
+
+```bibtex
+@software{tokenizer_bias_2026,
+  author = {Rahul Kiran G},
+  title = {Tokenizer-Bias: Understanding Byte-Level and Subword Representations},
+  year = {2026},
+  url = {https://github.com/rahulkiran2222/tokenizer-bias}
+}
+```
+
+---
+
+# Author
+
+### Rahul Kiran G
+
+AI Researcher • Foundation Models • Multilingual NLP • Tokenizer-Free Architectures
+
+> *Understanding language beyond tokens.*
