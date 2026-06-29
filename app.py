@@ -4,7 +4,7 @@ from transformers import AutoTokenizer
 from utils.robustness import get_ocr_noise, get_transliteration
 from utils.metrics import get_fragmentation_stats
 
-tokenizer = AutoTokenizer.from_pretrained("meta-llama/Llama-2-7b-hf")
+tokenizer = AutoTokenizer.from_pretrained("NousResearch/Llama-2-7b-hf")
 
 def run_experiment(text):
     stats = get_fragmentation_stats(text, tokenizer)
