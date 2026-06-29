@@ -212,13 +212,16 @@ Test       10%
 
 ---
 
-# Example Results
+# Early Experiments (*Limitations Applicable)
 
-| Language | Avg Tokens | Byte Count | Fertility Ratio |
-| -------- | ---------- | ---------- | --------------- |
-| English  | 1          | 5          | 1.0×            |
-| Hindi    | 5          | 15         | 4.8×            |
-| Telugu   | 24         | 24         | 24.0×           |
+Early experiments with the live demo show a consistent pattern: Hindi and Telugu text is
+fragmented into substantially more subword tokens per character than comparable English
+text under the Llama tokenizer, and the gap widens for Telugu, which is more
+morphologically dense and less represented in the tokenizer's training data. This supports
+the core hypothesis — that subword tokenizers impose an uneven computational and context-length
+cost across languages — but exact numeric fertility ratios are still being validated
+across tokenizer backends and are intentionally omitted here pending a more rigorous
+benchmark pass (see Limitations).
 
 ---
 
@@ -358,7 +361,10 @@ and aligns with ongoing research in tokenizer-free language and vision foundatio
   url = {https://github.com/rahulkiran2222/tokenizer-bias}
 }
 ```
-
+* Reported fertility ratios are sensitive to the specific tokenizer checkpoint and
+  fast/slow tokenizer backend used; numeric results are being re-validated before
+  being published in the README and will be added once confirmed.
+  
 ---
 
 # Author
