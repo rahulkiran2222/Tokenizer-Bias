@@ -361,6 +361,7 @@ and aligns with ongoing research in tokenizer-free language and vision foundatio
   url = {https://github.com/rahulkiran2222/tokenizer-bias}
 }
 ```
+# LIMITATIONS
 * Reported fertility ratios are sensitive to the specific tokenizer checkpoint and
   fast/slow tokenizer backend used; numeric results are being re-validated before
   being published in the README and will be added once confirmed.
